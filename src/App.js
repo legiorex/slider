@@ -2,32 +2,27 @@ import React, { Component } from 'react';
 import './App.css';
 import axios from 'axios';
 
-
 class App extends Component {
-
-  componentDidMount(){
+  componentDidMount() {
     axios
-    .get('http://5bf26792a60fe600134cdf1a.mockapi.io/photoArray')
-    .then(({ data }) => {
-      this.setState({
-        images: data,
-        selectedImageId: '5bfd3b13dcda9d41848224f4',
+      .get('http://5bf26792a60fe600134cdf1a.mockapi.io/photoArray')
+      .then(({ data }) => {
+        this.setState({
+          images: data,
+          selectedImageId: '5bfd3b13dcda9d41848224f4',
+        });
       });
-    });
   }
 
   state = {
     images: [
-     { id: '', src: '' }, // 0    
+      { id: '', src: '' }, // 0
     ],
     selectedImageId: '', // ←
-    
   };
 
   _selectPrevImage = () => {
     const { images, selectedImageId } = this.state;
-    console.log(images);
-    console.log(this.state);
 
     const selectedImageIndex = images.findIndex(
       image => image.id === selectedImageId // предикат (predicate)
@@ -72,12 +67,22 @@ class App extends Component {
       selectedImageId: id,
     });
   };
+  //   _nameAuthor = () => {
+  //     const { images, selectedImageId } = this.state;
+  //     const selectedAuthor = images.map(({ id, author }) => {
+  //       if (selectedImageId === images.id) {
+  //         return images.author;
+  //       }
+  //     });
+  //     return selectedAuthor;
+  //   };
 
   render() {
     const { images, selectedImageId } = this.state;
-    
+
     // Через id
     const selectedImage = images.find(image => image.id === selectedImageId);
+    const nameAuthor = images.find(image => image.id === selectedImageId);
 
     // Через index
     // const selectedImage = images.find(
@@ -88,8 +93,11 @@ class App extends Component {
       <div className="app">
         <img src={selectedImage.src} />
         <div className="control">
-          <button onClick={this._selectPrevImage}>←</button>
-          <button onClick={this._nextPrevImage}>→</button>
+          <div className="navigator">
+            <button onClick={this._selectPrevImage}>←</button>
+            <div className="authorTitle">{nameAuthor.author}</div>
+            <button onClick={this._nextPrevImage}>→</button>
+          </div>
         </div>
       </div>
     );

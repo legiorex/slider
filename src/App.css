@@ -7,13 +7,22 @@
   background-color: #191916;
   min-height: 100vh;
 }
+.navigator{
+  display: flex;
+  width: 750px;    
+  justify-content: space-between;
+}
 
 img {
-  width: 1000px;
-  height: 500px;
+  width: 1300px;
+  height: 700px;
   border: 3px solid wheat;
   margin-bottom: 25px;
   border-radius: 8px;
+}
+.authorTitle{
+  color: #fff;
+  font-size: 25px;
 }
 
 .control button {
@@ -29,6 +38,6 @@ img {
   background-color: grey;
 }
 
-.control button:not(:last-child) {
+/* .control button:not(:last-child) {
   margin-right: 15px;
-}
+} */
