@@ -26,6 +26,10 @@ class App extends Component {
           .get("http://5bf26792a60fe600134cdf1a.mockapi.io/photoArray")
           .then(({ data }) => {
               console.log(data);
+              this.setState({
+                images: data,
+                selectedImageId: data[0].id,
+              });
           });
   }
 
