@@ -6,6 +6,7 @@
   text-align: center;
   background-color: #191916;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 .navigator{
   display: flex;
@@ -37,6 +38,10 @@ img {
 .control button:hover {
   background-color: grey;
 }
+.Image__section {
+ display: flex; 
+}
+
 
 /* .control button:not(:last-child) {
   margin-right: 15px;

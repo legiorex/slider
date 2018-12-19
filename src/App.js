@@ -5,20 +5,27 @@ import axios from 'axios';
 class App extends Component {
   componentDidMount() {
     axios
-      .get('http://5bf26792a60fe600134cdf1a.mockapi.io/photoArray')
+      .get("http://5bf26792a60fe600134cdf1a.mockapi.io/photoArray")
       .then(({ data }) => {
         this.setState({
           images: data,
-          selectedImageId: '5bfd3b13dcda9d41848224f4',
+          selectedImageId: data[0].id,
+          prevImageId: data[data.length - 1].id,
+          nextImageId: data[1].id
         });
       });
   }
 
   state = {
     images: [
-      { id: '', src: '' }, // 0
+      {
+        id: "",
+        src: ""
+      }
     ],
-    selectedImageId: '', // ←
+    selectedImageId: "",
+    nextImageId: "",
+    prevImageId: ""
   };
 
   _selectPrevImage = () => {
@@ -41,7 +48,7 @@ class App extends Component {
     const { id } = images.find((image, index) => index === prevImageIndex);
 
     this.setState({
-      selectedImageId: id,
+      selectedImageId: id
     });
 
     // 1. перебрать images
@@ -64,25 +71,43 @@ class App extends Component {
     const { id } = images.find((image, index) => index === nextImageIndex);
 
     this.setState({
-      selectedImageId: id,
+      selectedImageId: id
     });
   };
-  //   _nameAuthor = () => {
-  //     const { images, selectedImageId } = this.state;
-  //     const selectedAuthor = images.map(({ id, author }) => {
-  //       if (selectedImageId === images.id) {
-  //         return images.author;
-  //       }
-  //     });
-  //     return selectedAuthor;
-  //   };
+
+  _handleKeyDown = () => {
+    document.body.onkeydown = event => {
+      if (event.key === "ArrowRight") {
+        this._nextPrevImage();
+      } else if (event.key === "ArrowLeft") {
+        this._selectPrevImage();
+      }
+    };
+  };
+
+  _scrollEvent = () => {
+    document.body.onwheel = event => {
+      event.preventDefault();
+      if (event.deltaY > 0) {
+        this._nextPrevImage();
+      } else if (event.deltaY < 0 ) {
+        this._selectPrevImage();
+      }
+      console.log(event.deltaY);
+    };
+  };
 
   render() {
-    const { images, selectedImageId } = this.state;
+    const { images, selectedImageId, prevImageId, nextImageId } = this.state;
 
     // Через id
     const selectedImage = images.find(image => image.id === selectedImageId);
-    const nameAuthor = images.find(image => image.id === selectedImageId);
+
+    const prevImage = images.find(image => image.id === prevImageId);
+    const nextImage = images.find(image => image.id === nextImageId);
+
+    // console.log(prevImage);
+    // console.log(nextImage);
 
     // Через index
     // const selectedImage = images.find(
@@ -90,12 +115,21 @@ class App extends Component {
     // );
 
     return (
-      <div className="app">
-        <img src={selectedImage.src} />
+      <div
+        className="app"
+        onKeyDown={this._handleKeyDown}
+        onWheel={this._scrollEvent}
+      >
+        <div className="Image__section">
+          <img src={prevImage.src} />
+          <img src={selectedImage.src} />
+          <img src={nextImage.src} />
+        </div>
+
         <div className="control">
           <div className="navigator">
             <button onClick={this._selectPrevImage}>←</button>
-            <div className="authorTitle">{nameAuthor.author}</div>
+            <div className="authorTitle">{selectedImage.author}</div>
             <button onClick={this._nextPrevImage}>→</button>
           </div>
         </div>
