@@ -20,7 +20,25 @@ img {
   border: 3px solid wheat;
   margin-bottom: 25px;
   border-radius: 8px;
+  
 }
+img.inStart {
+  opacity: 0;
+}
+img.inEnd {
+  transition: opacity 5000ms;
+  opacity: 1;
+}
+
+img.outStart {  
+  opacity: 1;
+}
+
+img.outEnd {
+  transition: opacity 4000ms;
+  opacity: 0;
+}
+
 .authorTitle{
   color: #fff;
   font-size: 25px;

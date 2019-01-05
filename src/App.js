@@ -1,31 +1,15 @@
 import React, { Component } from 'react';
 import './App.css';
-import axios from 'axios';
+// import axios from 'axios';
+import photoArrayLocal from './data.json';
+import {Transition, CSSTransition, TransitionGroup} from 'react-transition-group';
 
 class App extends Component {
-  componentDidMount() {
-    axios
-      .get("http://5bf26792a60fe600134cdf1a.mockapi.io/photoArray")
-      .then(({ data }) => {
-        this.setState({
-          images: data,
-          selectedImageId: data[0].id,
-          prevImageId: data[data.length - 1].id,
-          nextImageId: data[1].id
-        });
-      });
-  }
-
   state = {
-    images: [
-      {
-        id: "",
-        src: ""
-      }
-    ],
-    selectedImageId: "",
-    nextImageId: "",
-    prevImageId: ""
+    images: photoArrayLocal,
+    selectedImageId: photoArrayLocal[0].id,
+    nextImageId: photoArrayLocal[1].id,
+    prevImageId: photoArrayLocal[photoArrayLocal.length - 1].id,    
   };
 
   _selectPrevImage = () => {
@@ -35,20 +19,26 @@ class App extends Component {
       image => image.id === selectedImageId // предикат (predicate)
     );
 
-    let prevImageIndex = selectedImageIndex - 1;
+    let currentImageIndex = selectedImageIndex - 1;
 
-    // if (prevImageIndex === -1) {
-    //     return null;
-    // }
+    if (currentImageIndex === -1) {
+      currentImageIndex = images.length - 1;
+    }
+
+    let prevImageIndex = currentImageIndex - 1;
 
     if (prevImageIndex === -1) {
       prevImageIndex = images.length - 1;
     }
 
-    const { id } = images.find((image, index) => index === prevImageIndex);
+    const { id } = images.find((image, index) => index === currentImageIndex);
+
+    const prevImg = images.find((image, index) => index === prevImageIndex);
 
     this.setState({
-      selectedImageId: id
+      selectedImageId: id,
+      nextImageId: selectedImageId,
+      prevImageId: prevImg.id
     });
 
     // 1. перебрать images
@@ -56,23 +46,55 @@ class App extends Component {
     // 3. выбрать предыдущий
   };
 
-  _nextPrevImage = () => {
-    const { images, selectedImageId } = this.state;
-    const selectedImageIndex = images.findIndex(
+  // componentDidMount() {
+  //   this._timer = setTimeout(
+  //     (this.tick = () => {
+  //       this._nextPrevImage();
+
+  //       this._timer = setTimeout(this.tick, 5000);
+  //     }),
+  //     5000
+  //   );
+  // }
+
+  // componentWillUnmount() {
+  //   clearTimeout(this._timer);
+  //   this._animateImg(0);
+  // }
+
+  _animateImg(n) {
+    this.setState({
+      animate: n
+    })
+  }
+
+  _nextPrevImage = async () => {
+    const { images, selectedImageId } = this.state;    
+    const selectedImageIndex = await images.findIndex(
       image => image.id === selectedImageId
     );
 
-    let nextImageIndex = selectedImageIndex + 1;
+    let currentImageIndex = selectedImageIndex + 1;
+
+    if (currentImageIndex === images.length) {
+      currentImageIndex = 0;
+    }
+
+    let nextImageIndex = currentImageIndex + 1;
 
     if (nextImageIndex === images.length) {
       nextImageIndex = 0;
     }
 
-    const { id } = images.find((image, index) => index === nextImageIndex);
+    const { id } = images.find((image, index) => index === currentImageIndex);
+
+    const nextImg = images.find((image, index) => index === nextImageIndex);
 
     this.setState({
-      selectedImageId: id
-    });
+      selectedImageId: id,
+      nextImageId: nextImg.id,
+      prevImageId: selectedImageId,      
+    });    
   };
 
   _handleKeyDown = () => {
@@ -90,30 +112,26 @@ class App extends Component {
       event.preventDefault();
       if (event.deltaY > 0) {
         this._nextPrevImage();
-      } else if (event.deltaY < 0 ) {
+      } else if (event.deltaY < 0) {
         this._selectPrevImage();
       }
-      console.log(event.deltaY);
     };
   };
 
   render() {
-    const { images, selectedImageId, prevImageId, nextImageId } = this.state;
+    const {
+      images,
+      selectedImageId,
+      prevImageId,
+      nextImageId,
+      animate
+    } = this.state;
 
     // Через id
     const selectedImage = images.find(image => image.id === selectedImageId);
 
     const prevImage = images.find(image => image.id === prevImageId);
     const nextImage = images.find(image => image.id === nextImageId);
-
-    // console.log(prevImage);
-    // console.log(nextImage);
-
-    // Через index
-    // const selectedImage = images.find(
-    //     (image, index) => index === selectedImageId,
-    // );
-
     return (
       <div
         className="app"
@@ -121,9 +139,22 @@ class App extends Component {
         onWheel={this._scrollEvent}
       >
         <div className="Image__section">
-          <img src={prevImage.src} />
-          <img src={selectedImage.src} />
-          <img src={nextImage.src} />
+        <CSSTransition 
+              classNames = {{
+              enter: 'inStart',
+              enterActive: 'inEnd',
+              exit: 'outStart',
+              exitActive: 'outEnd',
+              }}
+              timeout = {{
+                enter: 5000,
+                exit: 4000,
+              }}>
+                  {/* <img src={prevImage.src} /> */}
+                  <img src={selectedImage.src} />
+                  {/* <img src={nextImage.src} /> */}
+        </CSSTransition>
+         
         </div>
 
         <div className="control">
