@@ -1,3 +1,7 @@
+img {
+  /* position: absolute; */
+}
+
 .app {
   display: flex;
   flex-direction: column;
@@ -6,7 +10,7 @@
   text-align: center;
   background-color: #191916;
   min-height: 100vh;
-  overflow-x: hidden;
+  overflow-x: hidden;  
 }
 .navigator{
   display: flex;
@@ -14,49 +18,23 @@
   justify-content: space-between;
 }
 
-.mainImg {
+.Image__section {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
   width: 1300px;
   height: 700px;
+}
+
+.mainImg {
+  width: 100%;
+  height: 100%;
   border: 3px solid wheat;
   margin-bottom: 25px;
   border-radius: 8px;
-  /* transition-property: opacity;
-  transition-duration: 5s; */
-  /* opacity: 0;  */
-}
-.background-enter {
-  transform: translate(100%);
-}
-
-.background-enter.background-enter-active {
-  transform: translate(0%);
-  transition: transform 1000ms ease-in-out;
-}
-
-.background-leave {
-  transform: translate(0%);
-}
-
-.background-leave.background-leave-active {
-  transform: translate(-100%);
-  transition: transform 1000ms ease-in-out;
-}
-
-.inStart {
-  opacity: 0;
-}
-.inEnd {
-  transition: opacity 5000ms;
-  opacity: 1;
-}
-
-.outStart {  
-  opacity: 1;
-}
-
-.outEnd {
-  transition: opacity 5000ms;
-  opacity: 0;
+  will-change: transform, opacity;
+  position: absolute;
 }
 
 .authorTitle{
@@ -76,9 +54,7 @@
 .control button:hover {
   background-color: grey;
 }
-.Image__section {
- display: flex; 
-}
+
 
 
 /* .control button:not(:last-child) {

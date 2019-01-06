@@ -3,7 +3,7 @@ import './App.css';
 // import axios from 'axios';
 import photoArrayLocal from './data.json';
 // import {Transition, CSSTransition, TransitionGroup} from 'react-transition-group';
-import { Transition } from "react-spring";
+import { Transition, animated } from "react-spring";
 
 class App extends Component {
   state = {
@@ -11,13 +11,13 @@ class App extends Component {
     selectedImageId: photoArrayLocal[0].id,
     nextImageId: photoArrayLocal[1].id,
     prevImageId: photoArrayLocal[photoArrayLocal.length - 1].id,
-    animate: true,    
+    direction: true
   };
 
   _changeAnimate = () => {
-    this.setState({ animate: !this.state.animate })
+    this.setState({ animate: !this.state.animate });
     console.log(this.state.animate);
-  }
+  };
 
   _selectPrevImage = () => {
     const { images, selectedImageId } = this.state;
@@ -69,10 +69,9 @@ class App extends Component {
   //   this._animateImg(0);
   // }
 
- 
   _nextPrevImage = async () => {
     const { images, selectedImageId } = this.state;
-    this._changeAnimate();    
+    this._changeAnimate();
     const selectedImageIndex = await images.findIndex(
       image => image.id === selectedImageId
     );
@@ -96,8 +95,8 @@ class App extends Component {
     this.setState({
       selectedImageId: id,
       nextImageId: nextImg.id,
-      prevImageId: selectedImageId,      
-    });    
+      prevImageId: selectedImageId
+    });
   };
 
   _handleKeyDown = () => {
@@ -122,21 +121,12 @@ class App extends Component {
   };
 
   render() {
-    const {
-      images,
-      selectedImageId,
-      prevImageId,
-      nextImageId,      
-    } = this.state;
-
-
+    const { images, selectedImageId, direction } = this.state;
 
     // Через id
     const selectedImage = images.find(image => image.id === selectedImageId);
+    const directionAnime = direction ? 100 : 50;
 
-    const prevImage = images.find(image => image.id === prevImageId);
-    const nextImage = images.find(image => image.id === nextImageId);
-    
     return (
       <div
         className="app"
@@ -144,10 +134,23 @@ class App extends Component {
         onWheel={this._scrollEvent}
       >
         <div className="Image__section">
-        
-            <img className = 'mainImg' src={selectedImage.src}/>
-            
-         
+          <Transition
+            native
+            reset
+            unique
+            items={selectedImage.id}
+            from={{ opacity: 0, transform: "translate3d(100%,0,0)" }}
+            enter={{ opacity: 1, transform: "translate3d(0%,0,0)" }}
+            leave={{ opacity: 0, transform: "translate3d(-50%,0,0)" }}
+          >
+            {item => props => (
+              <animated.div
+                style={props}
+                className="mainImg"
+                children={<img src={selectedImage.src} />}
+              />
+            )}
+          </Transition>
         </div>
 
         <div className="control">
