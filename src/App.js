@@ -14,10 +14,10 @@ class App extends Component {
     direction: true
   };
 
-  _changeAnimate = () => {
-    this.setState({ animate: !this.state.animate });
-    console.log(this.state.animate);
-  };
+  // _changeAnimate = () => {
+  //   this.setState({ animate: !this.state.animate });
+  //   console.log(this.state.animate);
+  // };
 
   _selectPrevImage = () => {
     const { images, selectedImageId } = this.state;
@@ -45,7 +45,8 @@ class App extends Component {
     this.setState({
       selectedImageId: id,
       nextImageId: selectedImageId,
-      prevImageId: prevImg.id
+      prevImageId: prevImg.id,
+      direction: false
     });
 
     // 1. перебрать images
@@ -58,20 +59,19 @@ class App extends Component {
   //     (this.tick = () => {
   //       this._nextPrevImage();
 
-  //       this._timer = setTimeout(this.tick, 5000);
+  //       this._timer = setTimeout(this.tick, 1000);
   //     }),
-  //     5000
+  //     1000
   //   );
   // }
 
   // componentWillUnmount() {
-  //   clearTimeout(this._timer);
-  //   this._animateImg(0);
+  //   clearTimeout(this._timer);    
   // }
 
   _nextPrevImage = async () => {
     const { images, selectedImageId } = this.state;
-    this._changeAnimate();
+    // this._changeAnimate();
     const selectedImageIndex = await images.findIndex(
       image => image.id === selectedImageId
     );
@@ -95,7 +95,8 @@ class App extends Component {
     this.setState({
       selectedImageId: id,
       nextImageId: nextImg.id,
-      prevImageId: selectedImageId
+      prevImageId: selectedImageId,
+      direction: true
     });
   };
 
@@ -103,8 +104,10 @@ class App extends Component {
     document.body.onkeydown = event => {
       if (event.key === "ArrowRight") {
         this._nextPrevImage();
+        
       } else if (event.key === "ArrowLeft") {
         this._selectPrevImage();
+        
       }
     };
   };
@@ -113,19 +116,21 @@ class App extends Component {
     document.body.onwheel = event => {
       event.preventDefault();
       if (event.deltaY > 0) {
-        this._nextPrevImage();
+        this._nextPrevImage();       
       } else if (event.deltaY < 0) {
-        this._selectPrevImage();
+        this._selectPrevImage();        
       }
     };
   };
+
+ 
 
   render() {
     const { images, selectedImageId, direction } = this.state;
 
     // Через id
     const selectedImage = images.find(image => image.id === selectedImageId);
-    const directionAnime = direction ? 100 : 50;
+    
 
     return (
       <div
@@ -139,9 +144,10 @@ class App extends Component {
             reset
             unique
             items={selectedImage.id}
-            from={{ opacity: 0, transform: "translate3d(100%,0,0)" }}
+            from={ direction ? { opacity: 0, transform: "translate3d(100%,0,0)" } : { opacity: 0, transform: "translate3d(-50%,0,0)" }}
             enter={{ opacity: 1, transform: "translate3d(0%,0,0)" }}
-            leave={{ opacity: 0, transform: "translate3d(-50%,0,0)" }}
+            leave={direction ? { opacity: 0, transform: "translate3d(-50%,0,0)" } : { opacity: 0, transform: "translate3d(100%,0,0)" }}
+            
           >
             {item => props => (
               <animated.div
