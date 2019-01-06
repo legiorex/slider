@@ -1,23 +1,15 @@
 import React, { Component } from 'react';
 import './App.css';
-// import axios from 'axios';
 import photoArrayLocal from './data.json';
-// import {Transition, CSSTransition, TransitionGroup} from 'react-transition-group';
 import { Transition, animated } from "react-spring";
 
 class App extends Component {
   state = {
     images: photoArrayLocal,
-    selectedImageId: photoArrayLocal[0].id,
-    nextImageId: photoArrayLocal[1].id,
-    prevImageId: photoArrayLocal[photoArrayLocal.length - 1].id,
+    selectedImageId: photoArrayLocal[0].id,   
     direction: true
   };
-
-  // _changeAnimate = () => {
-  //   this.setState({ animate: !this.state.animate });
-  //   console.log(this.state.animate);
-  // };
+  
 
   _selectPrevImage = () => {
     const { images, selectedImageId } = this.state;
@@ -27,25 +19,17 @@ class App extends Component {
     );
 
     let currentImageIndex = selectedImageIndex - 1;
+    
 
     if (currentImageIndex === -1) {
       currentImageIndex = images.length - 1;
     }
 
-    let prevImageIndex = currentImageIndex - 1;
-
-    if (prevImageIndex === -1) {
-      prevImageIndex = images.length - 1;
-    }
-
     const { id } = images.find((image, index) => index === currentImageIndex);
-
-    const prevImg = images.find((image, index) => index === prevImageIndex);
-
+  
     this.setState({
       selectedImageId: id,
-      nextImageId: selectedImageId,
-      prevImageId: prevImg.id,
+     
       direction: false
     });
 
@@ -69,10 +53,10 @@ class App extends Component {
   //   clearTimeout(this._timer);    
   // }
 
-  _nextPrevImage = async () => {
+  _nextPrevImage = () => {
     const { images, selectedImageId } = this.state;
-    // this._changeAnimate();
-    const selectedImageIndex = await images.findIndex(
+
+    const selectedImageIndex = images.findIndex(
       image => image.id === selectedImageId
     );
 
@@ -81,21 +65,11 @@ class App extends Component {
     if (currentImageIndex === images.length) {
       currentImageIndex = 0;
     }
-
-    let nextImageIndex = currentImageIndex + 1;
-
-    if (nextImageIndex === images.length) {
-      nextImageIndex = 0;
-    }
-
+   
     const { id } = images.find((image, index) => index === currentImageIndex);
 
-    const nextImg = images.find((image, index) => index === nextImageIndex);
-
     this.setState({
-      selectedImageId: id,
-      nextImageId: nextImg.id,
-      prevImageId: selectedImageId,
+      selectedImageId: id,    
       direction: true
     });
   };
@@ -103,8 +77,7 @@ class App extends Component {
   _handleKeyDown = () => {
     document.body.onkeydown = event => {
       if (event.key === "ArrowRight") {
-        this._nextPrevImage();
-        
+        this._nextPrevImage();        
       } else if (event.key === "ArrowLeft") {
         this._selectPrevImage();
         
