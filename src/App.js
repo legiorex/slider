@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import './App.css';
 // import axios from 'axios';
 import photoArrayLocal from './data.json';
-import {Transition, CSSTransition, TransitionGroup} from 'react-transition-group';
-
+// import {Transition, CSSTransition, TransitionGroup} from 'react-transition-group';
+import { Transition } from "react-spring";
 
 class App extends Component {
   state = {
@@ -136,8 +136,7 @@ class App extends Component {
 
     const prevImage = images.find(image => image.id === prevImageId);
     const nextImage = images.find(image => image.id === nextImageId);
-
-
+    
     return (
       <div
         className="app"
@@ -145,21 +144,9 @@ class App extends Component {
         onWheel={this._scrollEvent}
       >
         <div className="Image__section">
-        <CSSTransition
-            classNames= 'background' 
-            // classNames={{
-            //   enter: 'inStart',
-            //   enterActive: 'inEnd',
-            //   exit: 'outStart',
-            //   exitActive: 'outEnd',
-            // }}
-            timeout={5000}
-              in = {this.state.animate}
-              >
-                  {/* <img src={prevImage.src} /> */}
+        
             <img className = 'mainImg' src={selectedImage.src}/>
-                  {/* <img src={nextImage.src} /> */}
-        </CSSTransition>
+            
          
         </div>
 
