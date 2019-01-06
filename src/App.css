@@ -14,28 +14,48 @@
   justify-content: space-between;
 }
 
-img {
+.mainImg {
   width: 1300px;
   height: 700px;
   border: 3px solid wheat;
   margin-bottom: 25px;
   border-radius: 8px;
-  
+  /* transition-property: opacity;
+  transition-duration: 5s; */
+  /* opacity: 0;  */
 }
-img.inStart {
+.background-enter {
+  transform: translate(100%);
+}
+
+.background-enter.background-enter-active {
+  transform: translate(0%);
+  transition: transform 1000ms ease-in-out;
+}
+
+.background-leave {
+  transform: translate(0%);
+}
+
+.background-leave.background-leave-active {
+  transform: translate(-100%);
+  transition: transform 1000ms ease-in-out;
+}
+
+.inStart {
   opacity: 0;
 }
-img.inEnd {
+.inEnd {
   transition: opacity 5000ms;
   opacity: 1;
 }
 
-img.outStart {  
+.outStart {  
   opacity: 1;
 }
 
-img.outEnd {
-  transition: opacity 4000ms;
+.outEnd {
+  transition: opacity 5000ms;
   opacity: 0;
 }
 

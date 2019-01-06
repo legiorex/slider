@@ -4,13 +4,20 @@ import './App.css';
 import photoArrayLocal from './data.json';
 import {Transition, CSSTransition, TransitionGroup} from 'react-transition-group';
 
+
 class App extends Component {
   state = {
     images: photoArrayLocal,
     selectedImageId: photoArrayLocal[0].id,
     nextImageId: photoArrayLocal[1].id,
-    prevImageId: photoArrayLocal[photoArrayLocal.length - 1].id,    
+    prevImageId: photoArrayLocal[photoArrayLocal.length - 1].id,
+    animate: true,    
   };
+
+  _changeAnimate = () => {
+    this.setState({ animate: !this.state.animate })
+    console.log(this.state.animate);
+  }
 
   _selectPrevImage = () => {
     const { images, selectedImageId } = this.state;
@@ -62,14 +69,10 @@ class App extends Component {
   //   this._animateImg(0);
   // }
 
-  _animateImg(n) {
-    this.setState({
-      animate: n
-    })
-  }
-
+ 
   _nextPrevImage = async () => {
-    const { images, selectedImageId } = this.state;    
+    const { images, selectedImageId } = this.state;
+    this._changeAnimate();    
     const selectedImageIndex = await images.findIndex(
       image => image.id === selectedImageId
     );
@@ -123,15 +126,18 @@ class App extends Component {
       images,
       selectedImageId,
       prevImageId,
-      nextImageId,
-      animate
+      nextImageId,      
     } = this.state;
+
+
 
     // Через id
     const selectedImage = images.find(image => image.id === selectedImageId);
 
     const prevImage = images.find(image => image.id === prevImageId);
     const nextImage = images.find(image => image.id === nextImageId);
+
+
     return (
       <div
         className="app"
@@ -139,19 +145,19 @@ class App extends Component {
         onWheel={this._scrollEvent}
       >
         <div className="Image__section">
-        <CSSTransition 
-              classNames = {{
-              enter: 'inStart',
-              enterActive: 'inEnd',
-              exit: 'outStart',
-              exitActive: 'outEnd',
-              }}
-              timeout = {{
-                enter: 5000,
-                exit: 4000,
-              }}>
+        <CSSTransition
+            classNames= 'background' 
+            // classNames={{
+            //   enter: 'inStart',
+            //   enterActive: 'inEnd',
+            //   exit: 'outStart',
+            //   exitActive: 'outEnd',
+            // }}
+            timeout={5000}
+              in = {this.state.animate}
+              >
                   {/* <img src={prevImage.src} /> */}
-                  <img src={selectedImage.src} />
+            <img className = 'mainImg' src={selectedImage.src}/>
                   {/* <img src={nextImage.src} /> */}
         </CSSTransition>
          
