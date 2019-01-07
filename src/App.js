@@ -1,15 +1,30 @@
 import React, { Component } from 'react';
 import './App.css';
-import photoArrayLocal from './data.json';
 import { Transition, animated } from "react-spring";
+import {api} from './API';
 
 class App extends Component {
+
+  componentDidMount() {
+    this._fetchPhotoAsync();
+  }
+
   state = {
-    images: photoArrayLocal,
-    selectedImageId: photoArrayLocal[0].id,   
-    direction: true
+    images: [{id: ''}],
+    selectedImageId: '',
+    direction: true,
   };
-  
+
+ 
+
+  _fetchPhotoAsync = async () => {
+    const photoArray = await api.fetchPhotos();
+    
+    this.setState({
+      images: photoArray,
+      selectedImageId: photoArray[0].id
+    });
+  };
 
   _selectPrevImage = () => {
     const { images, selectedImageId } = this.state;
@@ -19,17 +34,16 @@ class App extends Component {
     );
 
     let currentImageIndex = selectedImageIndex - 1;
-    
 
     if (currentImageIndex === -1) {
       currentImageIndex = images.length - 1;
     }
 
     const { id } = images.find((image, index) => index === currentImageIndex);
-  
+
     this.setState({
       selectedImageId: id,
-     
+
       direction: false
     });
 
@@ -50,7 +64,7 @@ class App extends Component {
   // }
 
   // componentWillUnmount() {
-  //   clearTimeout(this._timer);    
+  //   clearTimeout(this._timer);
   // }
 
   _nextPrevImage = () => {
@@ -65,11 +79,11 @@ class App extends Component {
     if (currentImageIndex === images.length) {
       currentImageIndex = 0;
     }
-   
+
     const { id } = images.find((image, index) => index === currentImageIndex);
 
     this.setState({
-      selectedImageId: id,    
+      selectedImageId: id,
       direction: true
     });
   };
@@ -77,10 +91,9 @@ class App extends Component {
   _handleKeyDown = () => {
     document.body.onkeydown = event => {
       if (event.key === "ArrowRight") {
-        this._nextPrevImage();        
+        this._nextPrevImage();
       } else if (event.key === "ArrowLeft") {
         this._selectPrevImage();
-        
       }
     };
   };
@@ -89,21 +102,25 @@ class App extends Component {
     document.body.onwheel = event => {
       event.preventDefault();
       if (event.deltaY > 0) {
-        this._nextPrevImage();       
+        this._nextPrevImage();
       } else if (event.deltaY < 0) {
-        this._selectPrevImage();        
+        this._selectPrevImage();
       }
     };
   };
-
- 
 
   render() {
     const { images, selectedImageId, direction } = this.state;
 
     // Через id
     const selectedImage = images.find(image => image.id === selectedImageId);
-    
+
+    const farmId = selectedImage.farm;
+    const serverId = selectedImage.server;
+    const photoId = selectedImage.id;
+    const secret = selectedImage.secret;
+
+    const imgSrc = `https://farm${farmId}.staticflickr.com/${serverId}/${photoId}_${secret}_c.jpg`;
 
     return (
       <div
@@ -117,16 +134,23 @@ class App extends Component {
             reset
             unique
             items={selectedImage.id}
-            from={ direction ? { opacity: 0, transform: "translate3d(100%,0,0)" } : { opacity: 0, transform: "translate3d(-50%,0,0)" }}
+            from={
+              direction
+                ? { opacity: 0, transform: "translate3d(100%,0,0)" }
+                : { opacity: 0, transform: "translate3d(-50%,0,0)" }
+            }
             enter={{ opacity: 1, transform: "translate3d(0%,0,0)" }}
-            leave={direction ? { opacity: 0, transform: "translate3d(-50%,0,0)" } : { opacity: 0, transform: "translate3d(100%,0,0)" }}
-            
+            leave={
+              direction
+                ? { opacity: 0, transform: "translate3d(-50%,0,0)" }
+                : { opacity: 0, transform: "translate3d(100%,0,0)" }
+            }
           >
             {item => props => (
               <animated.div
                 style={props}
                 className="mainImg"
-                children={<img src={selectedImage.src} />}
+                children={<img src={imgSrc} />}
               />
             )}
           </Transition>
