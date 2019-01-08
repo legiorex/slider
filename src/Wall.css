@@ -1,0 +1,24 @@
+.wrapper{
+    position: relative;
+}
+
+
+.content {
+    display: flex;
+    flex-wrap: wrap;
+    height: 1200px;
+    flex-direction: column;
+    /* overflow-y: hidden; */
+}
+.imgWrapper{
+    height: 300px;    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden
+}
+img {
+    flex-shrink: 0;
+    min-width: 100%;
+    min-height: 100%
+}
