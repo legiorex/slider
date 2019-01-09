@@ -1,96 +1,70 @@
 import React, { Component } from 'react';
 import './Wall.css';
-import { api } from './API';
-
-// dateadded: "1546798179"
-
-// farm: 8
-
-// id: "31692078507"
-
-// isfamily: 0
-
-// isfriend: 0
-
-// ispublic: 1
-
-// owner: "42187767@N07"
-
-// ownername: "Martial Soula"
-
-// secret: "059ddca6dd"
-
-// server: "7833"
-
-// title: "L'argentique est toujours vivant"
+// import { api } from './API';
+import PagePhoto from './PagePhoto';
 
 class Wall extends Component {
+  // componentDidMount() {
+  //   this._fetchPhotoAsync();
+  // }
 
-  componentDidMount() {
-      this._fetchPhotoAsync();
-    };
+  // _fetchPhotoAsync = async () => {
+  //   const photoArray = await api.fetchPhotos();
 
+  //   this.setState({ photoArray });
+  // };
 
   state = {
-    photoArray: [],
+    pages: [0],
+    addPage: false,
   };
 
-
-    _fetchPhotoAsync = async () => {
-        const photoArray = await api.fetchPhotos();
-
-        this.setState({ photoArray });
-    };
-    
-  _scrollEvent = () => {  
-  
+  _scrollEvent = () => {
     document.body.onwheel = event => {
       event.preventDefault();
-      const test = event.target.parentNode.parentNode;
-      
-      const endWindow = test.scrollWidth - document.body.clientWidth;
-      
-      if (endWindow === window.pageXOffset) {
-        console.log("true");
-      } else {
-        console.log("false");
-      }
 
+      this._test(event);
 
-      if (event.deltaY > 0){
+      if (event.deltaY > 0) {
         window.scrollBy(100, 0);
       } else {
         window.scrollBy(-100, 0);
-      } 
+      }
     };
   };
 
-  
+  _test = event => {
+    const contentWrapper = event.target.parentNode.parentNode;
+
+    const endWindow = contentWrapper.scrollWidth - document.body.clientWidth;
+
+    if (endWindow <= window.pageXOffset) {
+      console.log('true');
+      this.setState({ addPage: true });
+    } else {
+      console.log('false');
+    }
+  };
 
   render() {
+    const { pages } = this.state;
+    console.log(pages);
 
+    const pagesJSX = pages.map((page, index) => {
+      // console.log(page);
+      // console.log(index);
 
-    const { photoArray } = this.state;
-    
-    const imgJSX = photoArray.map((photo) => {
-
-      const imgUrl = `https://farm${photo.farm}.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}.jpg`;
-      
-      return <section className="imgWrapper" key={photo.id}>
-          <img src={imgUrl} alt="" />
-        </section>;      
-      
-    })
-
-
+      return <PagePhoto key={index} />;
+    });
 
     return (
-    <>
+      <>
         <div className="content" onWheel={this._scrollEvent}>
-          {imgJSX}
+          {/* <PagePhoto /> */}
+          {pagesJSX}
         </div>
-    </> 
-     )
+      </>
+    );
   }
 }
 export default Wall;
