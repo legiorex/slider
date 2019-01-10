@@ -5,17 +5,33 @@ import PagePhoto from './PagePhoto';
 
 class Wall extends Component {
   componentDidMount() {
-    this._addNewPage();
+
+    this._test();
+    
+    // setTimeout(() => {
+      
+    //   console.log('scroll after page load');
+    //   window.scrollBy(1000, 0);
+    // }, 2000);
    
     // console.log(document.body.children.root.children[0].scrollWidth)
   }
 
-  _test = () => {
-    console.log('test');
+  _test = async () => {
+    
+    await this._addNewPage();
+    // await window.scrollBy(1000, 0);
+    await this._scroll();
+    
 
     // document.body.scrollTo(500, 0);
   };
 
+  _scroll = () => {
+    // this._div.scrollLeft = 1000;
+    window.scrollTo(100, 0);
+    console.log(this._div); 
+  }
   state = {
     pages: [],
   };
@@ -62,6 +78,7 @@ class Wall extends Component {
     if (endWindow <= window.pageXOffset && pages.length < 2) {
       this._addNewPage();
       console.log("true");
+      
       // this.setState({ pages: pages.concat(1) });
     } else {
       console.log("false");
@@ -85,13 +102,11 @@ class Wall extends Component {
       
     });
 
-    return (
-      <>
-        <div className="content" onWheel={this._scrollEvent}>
+    return <>
+        <div className="content" onWheel={this._scrollEvent} ref={ref => (this._div = ref)} onLoad = {this._scroll} >
           {pagesJSX}
         </div>
-      </>
-    );
+      </>;
   }
 }
 export default Wall;
