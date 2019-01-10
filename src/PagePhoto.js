@@ -34,15 +34,7 @@ class PagePhoto extends Component {
       );
     });
 
-    return (
-    <>
-          <div className = "container">
-            {imgJSX}
-          </div>
-      
-      
-    </>
-    );
+    return imgJSX;
   }
 }
 export default PagePhoto;
