@@ -12,20 +12,16 @@ class PagePhoto extends Component {
     addPage: false,
   };
 
-
-
   _fetchPhotoAsync = async () => {
     const photoArray = await api.fetchPhotos();
+    
 
     this.setState({ photoArray });
   };
 
-  
-
   render() {
-
     const { photoArray } = this.state;
-    
+
     const imgJSX = photoArray.map(photo => {
       const imgUrl = `https://farm${photo.farm}.staticflickr.com/${
         photo.server
@@ -39,9 +35,13 @@ class PagePhoto extends Component {
     });
 
     return (
-      <>        
-          {imgJSX}        
-      </>
+    <>
+          <div className = "container">
+            {imgJSX}
+          </div>
+      
+      
+    </>
     );
   }
 }
