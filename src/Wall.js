@@ -4,55 +4,39 @@ import './Wall.css';
 import PagePhoto from './PagePhoto';
 
 class Wall extends Component {
-  componentDidMount() {
-
-    this._test();
-    
-    // setTimeout(() => {
+  
+  componentDidMount () {
+    this._addNewPage();
       
-    //   console.log('scroll after page load');
-    //   window.scrollBy(1000, 0);
-    // }, 2000);
-   
-    // console.log(document.body.children.root.children[0].scrollWidth)
   }
 
-  _test = async () => {
-    
-    await this._addNewPage();
-    // await window.scrollBy(1000, 0);
-    await this._scroll();
-    
+  // shouldComponentUpdate(){
+  //   this.setState({scrollStart: false})
+  // }
 
-    // document.body.scrollTo(500, 0);
-  };
-
-  _scroll = () => {
-    // this._div.scrollLeft = 1000;
-    window.scrollTo(100, 0);
-    console.log(this._div); 
-  }
+  
   state = {
-    pages: [],
+    pages: [],    
   };
 
-  _addNewPage = () => {
-    const { pages } = this.state;
+  _scrollStart = () => {
+
+    const {pages} = this.state;
+
+    return pages.length === 1 ? window.scrollTo(1000, 0) : null    
     
-    // console.log(document.body.clientWidth)
+  }
 
-     this.setState({ pages: pages.concat(this._idGen()) });
-     
-  };
+ 
 
   _scrollEvent = () => {
     document.body.onwheel = event => {
       event.preventDefault();
-
      
       this._checkScroll(event);
 
       if (event.deltaY > 0) {
+        
         window.scrollBy(100, 0);
       } else {
         window.scrollBy(-100, 0);
@@ -67,22 +51,33 @@ class Wall extends Component {
     const endWindow = contentWrapper.scrollWidth - document.body.clientWidth;
 
     // console.log('ширина блока   ', endWindow);
-    // console.log("текущий скролл   ", window.pageXOffset);
+    console.log("текущий скролл   ", window.pageXOffset);
 
-    // if (event.deltaY > 0) {
-    //   window.scrollBy(100, 0);
-    // } else {
-    //   this._addNewPage();
-    // }
-
-    if (endWindow <= window.pageXOffset && pages.length < 2) {
+    if (endWindow <= window.pageXOffset && pages.length < 3) {
       this._addNewPage();
-      console.log("true");
-      
-      // this.setState({ pages: pages.concat(1) });
-    } else {
-      console.log("false");
+      // console.log("true"); 
+    } else if (window.pageXOffset < 150) {
+      this._addNewPagePrev();
+      // console.log("false");
     }
+  };
+  _addNewPage = () => {
+
+    const { pages } = this.state;
+
+    pages.push(this._idGen());
+
+    this.setState({ pages: pages });
+
+  };
+  _addNewPagePrev = () => {
+
+    const { pages } = this.state;
+
+    pages.unshift(this._idGen());
+
+    this.setState({ pages: pages });
+
   };
 
   _idGen = () => {
@@ -90,6 +85,8 @@ class Wall extends Component {
       .toString(36)
       .substring(2, 7);
   };
+
+  
 
   render() {
     const { pages } = this.state;
@@ -103,7 +100,7 @@ class Wall extends Component {
     });
 
     return <>
-        <div className="content" onWheel={this._scrollEvent} ref={ref => (this._div = ref)} onLoad = {this._scroll} >
+        <div className="content" onWheel={this._scrollEvent} ref={ref => (this._div = ref)} onLoad = {this._scrollStart} >
           {pagesJSX}
         </div>
       </>;
