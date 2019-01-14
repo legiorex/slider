@@ -2,4 +2,8 @@
     position: relative;
 }
 
+.prevBlock, .nextBlock {
+    display: flex;    
+    flex-flow: wrap row;
+}
 

@@ -6,8 +6,8 @@
 
 .content  {
     display: flex;    
-    height: 1200px;
-    flex-direction: column;
+    height: 1200px;    
+    flex-flow: row wrap
     
 }
 .container {
@@ -31,7 +31,4 @@ img {
     min-width: 100%;
     min-height: 100%
 }
-.prevBlock, .nextBlock {
-    display: flex;    
-    flex-flow: wrap row;
-}
+

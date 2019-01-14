@@ -1,94 +1,86 @@
 import React, { Component } from 'react';
 import './Wall_Next.css';
-import PagePhoto from './PagePhoto';
+import { idGen } from "./instruments";
+import PagePhoto from "./PagePhoto";
 
 class Wall extends Component {
-  
-  componentDidMount () {
-    this._addNewPage();
-      
-  }
-
-  
-  state = {
-    pages: [],    
-  };
-
-  _scrollStart = () => {
-
-    const {pages} = this.state;
-
-    return pages.length === 1 ? window.scrollTo(0, 1000) : null    
-    
+  componentDidMount() {
+    this._addNextPhoto();
   }
 
  
 
-  
+  state = {
+    photos: [],
+    imgWight: ''
+  };
 
-  _checkScroll = event => {
-    const { pages } = this.state;
+  _checkScroll = event => {    
+    // event.preventDefault();
+    // window.scrollBy(0, 100);
 
-    // const contentWrapper = event.target.parentNode.parentNode;
+    const imgBlock = this._divContent.childNodes;
+    const test = event.target.parentNode;
+
+    const endWindow = this._divContent.scrollHeight - document.body.clientHeight;
     
-    const endWindow = window.pageYOffset + document.body.clientHeight;
-
-    // console.log('высота обоих блоков', this._divContent.scrollHeight)
-    // console.log('высота блока   ', endWindow);
     // console.log(document.body.clientHeight);
-    
     // console.log("текущий скролл   ", window.pageYOffset + document.body.clientHeight);
+    
+    const currentScroll = window.pageYOffset + document.body.clientHeight;
+    const hundredScroll = currentScroll - currentScroll % 100;
+    
+    const endPage = this._divContent.scrollHeight - 500;
+    console.log(endPage);
+    console.log("текущий скролл   ", hundredScroll);   
+ 
 
-    if (endWindow >= this._divContent.scrollHeight) {
-      // this._addNewPage();
-      console.log("вниз"); 
-    } else if ( window.pageYOffset <= 120 ) {
-      console.log('вверх')
+    if (hundredScroll === endPage) {
+      console.log("true");
+      this._addNextPhoto();
     }
-      
-      // console.log("false");
+
     
   };
 
-  _addNewPage = () => {
+  _addNextPhoto = () => {
+    const { photos } = this.state;
 
-    const { pages } = this.state;
+    photos.push(idGen());
 
-    pages.push(this._idGen());
+    // console.log(photos.length);
 
-    this.setState({ pages: pages });
-
+    this.setState({ photos });
+    
   };
-  
-
-  _idGen = () => {
-    return Math.random()
-      .toString(36)
-      .substring(2, 7);
-  };
-
-  
+  _checkArray = () => {
+    // const { photos } = this.state;
+    // if (photos.length > 2) {
+    //   photos.shift();
+    // }
+    
+    this.setState({ wightBlock: document.body.clientWidth});
+  }
 
   render() {
-    const { pages } = this.state;
+    const { photos, wightBlock } = this.state;
 
-    const pagesJSX = pages.map((page, index) => {
-     
-
-      return <PagePhoto key={index} />
-      
+    const photosJSX = photos.map((block, index) => {
+      return <PagePhoto key={index} wightBlock={wightBlock} />;
     });
 
-    return <>
-        <div className="content" onWheel={this._checkScroll} ref={ref => (this._divContent = ref)} onLoad = {this._scrollStart} >
-            <div className = 'prevBlock'>
-                {pagesJSX}
-            </div>
-            <div className = 'nextBlock'>
-                {pagesJSX}
-            </div>          
+    return (
+      <>
+        <div
+          className="content"
+          onWheel={this._checkScroll}
+          ref={ref => (this._divContent = ref)}
+          onLoad={this._checkArray}
+        >
+          {photosJSX}
         </div>
-      </>;
+      </>
+    );
   }
 }
 export default Wall;
