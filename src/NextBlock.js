@@ -2,17 +2,44 @@ import React, { Component } from "react";
 import PagePhoto from "./PagePhoto";
 
 class NextBlock extends Component {
+
+  state = {
+    wightBlock: '',
+    heightBlock: '',
+  }
   
- 
+  _checkSize = () => {
+    
+    this.setState(
+      { wightBlock: this._divBlock.scrollWidth,
+        heightBlock: window.innerHeight,
+      });
+  }
 
   render() {
-    const { nextBlocks } = this.props;   
+    const { wightBlock, heightBlock } = this.state;
+    const { pages } = this.props;
+    
 
-    const blockJSX = nextBlocks.map((block, index) => {
-      return <PagePhoto key={index} />;
+    const blockJSX = pages.map((block, index) => {
+
+      return (
+        <div className="nextBlock"
+          ref={ref => (this._divBlock = ref)}
+          onLoad={this._checkSize}
+          style={{ width: wightBlock }}
+          key={index}
+        >
+          <PagePhoto key={index} heightBlock={heightBlock} />;
+          
+
+        </div>
+      );
+
     });
 
-      return <div className="nextBlock">{blockJSX}</div>;
+    return  blockJSX
+    
   }
 }
 

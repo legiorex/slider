@@ -13,7 +13,8 @@ class PagePhoto extends Component {
     photoArray: [],
     photoUrl: [],    
     dataFinish: false,
-    colons: 5
+    colons: 5,
+    rows: 5,
   };
 
   _widthImg = () => {
@@ -21,6 +22,12 @@ class PagePhoto extends Component {
     const { colons } = this.state;
 
     return wightBlock / colons;
+  };
+  _heightImg = () => {
+    const { heightBlock } = this.props;
+    const { rows } = this.state;
+
+    return heightBlock / rows;
   };
 
   _fetchPhotoAsync = async () => {
@@ -63,8 +70,15 @@ class PagePhoto extends Component {
 
     const imgJSX = photoUrl.map(url => {
 
-      return <section className="imgWrapper" key={url.id} style={{ width: this._widthImg() }} data-finish={url.flag}>
+      return <section className="imgWrapper" 
+        key={url.id} 
+        style={{
+           width: this._widthImg(),
+           height: this._heightImg() }} 
+        data-finish={url.flag}>
+
           <img src={url.src} alt="" />
+
         </section>;
     });
 

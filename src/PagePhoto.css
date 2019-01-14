@@ -10,6 +10,12 @@
     flex-flow: row wrap
     
 }
+
+.contentWight{
+    display: flex;    
+    flex-flow: column wrap;
+    /* height: 1200px; */
+}
 .container {
     display: flex;
     flex-wrap: wrap;
@@ -30,5 +36,13 @@ img {
     flex-shrink: 0;
     min-width: 100%;
     min-height: 100%
+}
+
+.nextBlock{
+    display: flex;
+    flex-flow: column wrap;
+    height: 1200px;
+    width: 100%;
+   
 }
 

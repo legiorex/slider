@@ -31,8 +31,8 @@ class Wall extends Component {
     const hundredScroll = currentScroll - currentScroll % 100;
     
     const endPage = this._divContent.scrollHeight - 500;
-    console.log(endPage);
-    console.log("текущий скролл   ", hundredScroll);   
+    // console.log(endPage);
+    // console.log("текущий скролл   ", hundredScroll);   
  
 
     if (hundredScroll === endPage) {
@@ -45,12 +45,52 @@ class Wall extends Component {
 
   _addNextPhoto = () => {
     const { photos } = this.state;
+    const a = photos.length
+    console.log(a)
+    switch (a) {
+      // case void 0:
+      //   photos.push(idGen());
+      //   this.setState({ photos });
+      //   break;
 
-    photos.push(idGen());
+      // case 0:
+      //   photos.push(idGen());
+      //   this.setState({ photos });
+      //   break;
+
+      case 4:
+        photos.splice(0,2)
+        photos.push(idGen());
+        this.setState({ photos });
+        console.log('4', photos);
+        break;
+
+
+      default:
+
+        photos.push(idGen());
+        this.setState({ photos });
+        break;
+    }
+
+    
+
+    // if (photos.length === 3) {
+    //   photos.shift();
+    //   photos.push(idGen());
+    //   this.setState({ photos });
+    // } else if (photos.length < 2 ){
+    //   photos.push(idGen());
+    //   this.setState({ photos });
+    // }
+
+
+
+    
 
     // console.log(photos.length);
 
-    this.setState({ photos });
+    
     
   };
   _checkArray = () => {
