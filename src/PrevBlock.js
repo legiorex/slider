@@ -2,25 +2,44 @@ import React, { Component } from "react";
 import PagePhoto from "./PagePhoto";
 
 class PrevBlock extends Component {
-    _test = () => {
 
-        this._divPrevBlock.scrollIntoView(false);
-        console.log(this._divPrevBlock);
-    }
+  state = {
+    wightBlock: '',
+    heightBlock: '',
+  }
+  
+  _checkSize = () => {
+    
+    this.setState(
+      { wightBlock: this._divBlock.scrollWidth,
+        heightBlock: window.innerHeight,
+      });
+  }
 
   render() {
-      const { id } = this.props;
-      console.log(id);
-      
-    //   const blockJSX = prevBlocks.map((block, index) => {
-    //       return <div className="prevBlock" key={index}>
-    //         <PagePhoto  />
-    //       </div>;
-    //   });
+    const { wightBlock, heightBlock } = this.state;
+    const { pages } = this.props;
+    
 
-      return <div className="prevBlock" key={id} ref={ref => (this._divPrevBlock = ref)} onLoad={this._test}>
-          <PagePhoto />
-      </div>;
+    const blockJSX = pages.map((block, index) => {
+
+      return (
+        <div className="prevBlock"
+          ref={ref => (this._divBlock = ref)}
+          onLoad={this._checkSize}
+          style={{ width: wightBlock }}
+          key={index}
+        >
+          <PagePhoto key={index} heightBlock={heightBlock} />;
+          
+
+        </div>
+      );
+
+    });
+
+    return  blockJSX
+    
   }
 }
 

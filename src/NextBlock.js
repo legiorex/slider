@@ -22,25 +22,31 @@ class NextBlock extends Component {
     
 
     const blockJSX = pages.map((block, index) => {
-
-      return (
-        <div className="nextBlock"
-          ref={ref => (this._divBlock = ref)}
-          onLoad={this._checkSize}
-          style={{ width: wightBlock }}
-          key={index}
-        >
-          <PagePhoto key={index} heightBlock={heightBlock} />;
-          
-
-        </div>
-      );
+      
+      
+      
+      return <PagePhoto key={block} heightBlock={heightBlock} />;
 
     });
 
-    return  blockJSX
+    return blockJSX;
     
   }
 }
 
 export default NextBlock;
+// (
+
+
+
+//   <div className="nextBlock"
+//     ref={ref => (this._divBlock = ref)}
+//     onLoad={this._checkSize}
+//     style={{ width: wightBlock }}
+//     key={index}
+//   >
+//     {blockJSX}
+
+
+//   </div>
+// );

@@ -7,6 +7,7 @@ import NextBlock from './NextBlock';
 class Wall extends Component {
   componentDidMount() {
     this._addNewPage();
+    
   }
 
   // shouldComponentUpdate(){
@@ -15,7 +16,7 @@ class Wall extends Component {
 
   state = {
     pages: [],
-    heightBlock: ""
+    wightBlock: ""
   };
 
   _scrollStart = () => {
@@ -50,10 +51,10 @@ class Wall extends Component {
     if (endWindow <= window.pageXOffset && pages.length < 3) {
       // this._addNewPage();
       // console.log("true");
-    } else if (window.pageXOffset < 150) {
-      this._addNewPagePrev();
-      // console.log("false");
-    }
+    } else if (window.pageXOffset > 600 && window.pageXOffset <= 700) {
+             this._addNewPagePrev();
+             // console.log("false");
+           }
   };
   _addNewPage = () => {
     const { pages } = this.state;
@@ -64,11 +65,14 @@ class Wall extends Component {
   };
   _addNewPagePrev = () => {
     const { pages } = this.state;
-    
-
+    console.log(pages.length);
     pages.unshift(this._idGen());
 
-    this.setState({ pages: pages });
+    this.setState({ 
+      pages: pages,
+      wightBlock: this._divBlock.scrollWidth 
+    });
+    
   };
 
   _idGen = () => {
@@ -78,19 +82,39 @@ class Wall extends Component {
   };
 
   _centerScreen = () => {
-    const { pages } = this.state;
-   
+    const { pages, wightBlock } = this.state;
+
     
-    if (pages.length === 1){
+
+    
+
+    if (pages.length === 1) {
       window.scrollTo(3000, 0);
+      
+      // console.log('test')
+    } else {
+      window.scrollTo(this._divBlock.scrollWidth , 0);
+      this._divBlock.scrollIntoView(false);
     }
   };
 
   render() {
-    const { pages } = this.state;
+    const { pages, wightBlock } = this.state;
     const heightPage = window.innerHeight;
 
-  
+    const block = pages.reverse().map((item, index) => {
+      return (
+        <div
+          className="nextBlock"
+          ref={ref => (this._divBlock = ref)}
+          onLoad={this._checkSize}
+          style={{ width: wightBlock }}
+          key={item}
+        >
+          <NextBlock pages={pages} />
+        </div>
+      );
+    });
 
     return (
       <>
@@ -101,8 +125,9 @@ class Wall extends Component {
           onLoad={this._centerScreen}
           style={{ height: heightPage }}
         >
-          {/* <PrevBlock /> */}
-          <NextBlock pages={pages} />
+          {block}
+
+          {/* <PrevBlock pages={pages} /> */}
           {/* <NextBlock pages={pages} /> */}
         </div>
       </>

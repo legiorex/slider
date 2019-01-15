@@ -38,7 +38,7 @@ img {
     min-height: 100%
 }
 
-.nextBlock{
+.nextBlock, .prevBlock{
     display: flex;
     flex-flow: column wrap;
     height: 1200px;

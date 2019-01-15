@@ -72,9 +72,9 @@ class PagePhoto extends Component {
 
       return <section className="imgWrapper" 
         key={url.id} 
-        style={{
-           width: this._widthImg(),
-           height: this._heightImg() }} 
+        // style={{
+        //    width: this._widthImg(),
+        //    height: this._heightImg() }} 
         data-finish={url.flag}>
 
           <img src={url.src} alt="" />
